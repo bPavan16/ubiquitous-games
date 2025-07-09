@@ -1,65 +1,69 @@
-import express from 'express';
-import http from 'http';
-import cors from 'cors';
-import mongoose from 'mongoose';
-import dotenv from 'dotenv';
-import setupSocketServer from './socket.js';
+const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
+const cors = require('cors');
+const SocketManager = require('./socket/SocketManager');
 
-// Import routes
-import authRoutes from './routes/auth.route.js';
-import gameRoutes from './routes/game.route.js';
-
-// Load environment variables
-dotenv.config();
-
-// Create Express app
 const app = express();
 const server = http.createServer(app);
-
-// Configure middleware
-app.use(cors());
-app.use(express.json());
-
-// Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/sudoku-app')
-    .then(() => console.log('Connected to MongoDB'))
-    .catch(err => console.error('MongoDB connection error:', err));
-
-// Use routes
-app.use('/api/auth', authRoutes);
-app.use('/api/games', gameRoutes);
-
-// Basic route
-app.get('/', (req, res) => {
-    res.json({ message: 'Multiplayer Sudoku API is running' });
+const io = socketIo(server, {
+    cors: {
+        origin: ["http://localhost:5174", "http://localhost:3000"],
+        methods: ["GET", "POST"],
+        credentials: true
+    }
 });
 
-// Handle 404 errors
-app.use((req, res) => {
-    res.status(404).json({ message: 'Route not found' });
+// Middleware
+app.use(cors({
+    origin: ["http://localhost:5174", "http://localhost:3000"],
+    credentials: true
+}));
+app.use(express.json());
+
+// Initialize Socket Manager
+const socketManager = new SocketManager(io);
+
+// Cleanup inactive games every 10 minutes
+setInterval(() => {
+    socketManager.cleanupInactiveGames();
+}, 10 * 60 * 1000);
+
+// REST API endpoints
+app.get('/api/health', (req, res) => {
+    res.json({
+        status: 'OK',
+        timestamp: new Date().toISOString(),
+        stats: socketManager.getGameStats()
+    });
+});
+
+app.get('/api/games', (req, res) => {
+    const availableGames = Array.from(socketManager.games.values())
+        .filter(game => game.gameState === 'waiting' && game.players.size < game.maxPlayers)
+        .map(game => game.getPublicGameInfo());
+
+    res.json(availableGames);
+});
+
+app.get('/api/stats', (req, res) => {
+    res.json(socketManager.getGameStats());
 });
 
 // Error handling middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);
-    res.status(500).json({
-        message: 'Internal server error',
-        error: process.env.NODE_ENV === 'development' ? err.message : undefined
-    });
+    res.status(500).json({ message: 'Something went wrong!' });
 });
 
-// Setup Socket.io
-setupSocketServer(server);
+// 404 handler
+app.use((req, res) => {
+    res.status(404).json({ message: 'Endpoint not found' });
+});
 
-// Start server
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
-
-// Handle unhandled promise rejections
-process.on('unhandledRejection', (err) => {
-    console.log('UNHANDLED REJECTION! Shutting down...');
-    console.error(err);
-    process.exit(1);
+    console.log(`🎮 Multiplayer Sudoku server running on port ${PORT}`);
+    console.log(`📊 Health check: http://localhost:${PORT}/api/health`);
+    console.log(`🎯 Available games: http://localhost:${PORT}/api/games`);
 });
