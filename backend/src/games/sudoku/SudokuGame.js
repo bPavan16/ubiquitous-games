@@ -1,23 +1,15 @@
-const SudokuGenerator = require('../utils/sudokuGenerator');
+const BaseGame = require('../base/BaseGame');
+const SudokuGenerator = require('./sudokuGenerator');
 
-class SudokuGame {
+class SudokuGame extends BaseGame {
   constructor(gameId, host, difficulty = 'medium') {
-    this.gameId = gameId;
-    this.host = host;
-    this.players = new Map();
+    super(gameId, host, 'sudoku');
     this.difficulty = difficulty;
+    this.maxPlayers = 4;
     
     const { puzzle, solution } = SudokuGenerator.generatePuzzle(difficulty);
     this.puzzle = puzzle;
     this.solution = solution;
-    
-    this.gameState = 'waiting'; // waiting, playing, finished, paused
-    this.maxPlayers = 4;
-    this.startTime = null;
-    this.endTime = null;
-    this.winner = null;
-    this.leaderboard = [];
-    this.moveHistory = [];
   }
 
   addPlayer(playerId, playerName) {
@@ -39,16 +31,6 @@ class SudokuGame {
     });
     
     return true;
-  }
-
-  removePlayer(playerId) {
-    this.players.delete(playerId);
-    
-    // If host leaves, assign new host
-    if (playerId === this.host && this.players.size > 0) {
-      this.host = this.players.keys().next().value;
-      this.players.get(this.host).isHost = true;
-    }
   }
 
   updatePlayerProgress(playerId, row, col, value) {
@@ -168,31 +150,6 @@ class SudokuGame {
     return conflicts;
   }
 
-  startGame() {
-    if (this.gameState === 'waiting' && this.players.size >= 1) {
-      this.gameState = 'playing';
-      this.startTime = Date.now();
-      return true;
-    }
-    return false;
-  }
-
-  pauseGame() {
-    if (this.gameState === 'playing') {
-      this.gameState = 'paused';
-      return true;
-    }
-    return false;
-  }
-
-  resumeGame() {
-    if (this.gameState === 'paused') {
-      this.gameState = 'playing';
-      return true;
-    }
-    return false;
-  }
-
   updateLeaderboard() {
     this.leaderboard = Array.from(this.players.values())
       .map(player => ({
@@ -213,36 +170,25 @@ class SudokuGame {
   }
 
   getGameState() {
-    this.updateLeaderboard();
+    const baseState = super.getGameState();
     
     return {
-      gameId: this.gameId,
-      host: this.host,
-      maxPlayers: this.maxPlayers,
+      ...baseState,
+      puzzle: this.puzzle,
+      difficulty: this.difficulty,
       players: Array.from(this.players.values()).map(player => ({
         ...player,
         completion: this.getPlayerCompletion(player.id)
-      })),
-      puzzle: this.puzzle,
-      gameState: this.gameState,
-      difficulty: this.difficulty,
-      winner: this.winner,
-      startTime: this.startTime,
-      endTime: this.endTime,
-      leaderboard: this.leaderboard,
-      totalMoves: this.moveHistory.length
+      }))
     };
   }
 
   getPublicGameInfo() {
+    const baseInfo = super.getPublicGameInfo();
+    
     return {
-      gameId: this.gameId,
-      host: this.players.get(this.host)?.name || 'Unknown',
-      playerCount: this.players.size,
-      maxPlayers: this.maxPlayers,
-      gameState: this.gameState,
-      difficulty: this.difficulty,
-      startTime: this.startTime
+      ...baseInfo,
+      difficulty: this.difficulty
     };
   }
 }

@@ -1,7 +1,7 @@
 import { SudokuBoard } from './SudokuBoard';
 import { PlayerList } from './PlayerList';
 import { GameControls } from './GameControls';
-import { ChatPanel } from './ChatPanel';
+import { ChatPanel } from '../Games/ChatPanel';
 import { Leaderboard } from './Leaderboard';
 import { useSudokuStore } from '@/store/sudokuStore';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

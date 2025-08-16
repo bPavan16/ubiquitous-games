@@ -10,7 +10,8 @@ export function GameControls() {
     pauseGame, 
     resumeGame, 
     selectedCell,
-    disconnect
+
+    leaveGame
   } = useSudokuStore();
 
   if (!currentGame) return null;
@@ -27,11 +28,11 @@ export function GameControls() {
   };
 
   const handleLeaveGame = () => {
-    disconnect();
+    leaveGame();
   };
 
   return (
-    <Card>
+    <Card className=''>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Play className="w-5 h-5" />

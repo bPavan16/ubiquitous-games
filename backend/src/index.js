@@ -2,13 +2,14 @@ const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
 const cors = require('cors');
-const SocketManager = require('./socket/SocketManager');
+const UnifiedSocketManager = require('./socket/UnifiedSocketManager');
+const GameFactory = require('./games/GameFactory');
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
     cors: {
-        origin: ["http://localhost:5174", "http://localhost:3000"],
+        origin: ["http://localhost:5174", "http://localhost:5173","http://localhost:3000"],
         methods: ["GET", "POST"],
         credentials: true
     }
@@ -16,13 +17,13 @@ const io = socketIo(server, {
 
 // Middleware
 app.use(cors({
-    origin: ["http://localhost:5174", "http://localhost:3000"],
+    origin: ["http://localhost:5174", "http://localhost:5173", "http://localhost:3000"],
     credentials: true
 }));
 app.use(express.json());
 
-// Initialize Socket Manager
-const socketManager = new SocketManager(io);
+// Initialize Unified Socket Manager
+const socketManager = new UnifiedSocketManager(io);
 
 // Cleanup inactive games every 10 minutes
 setInterval(() => {
@@ -39,15 +40,25 @@ app.get('/api/health', (req, res) => {
 });
 
 app.get('/api/games', (req, res) => {
-    const availableGames = Array.from(socketManager.games.values())
-        .filter(game => game.gameState === 'waiting' && game.players.size < game.maxPlayers)
-        .map(game => game.getPublicGameInfo());
-
-    res.json(availableGames);
+    const { gameType } = req.query;
+    
+    let availableGames = Array.from(socketManager.games.values())
+        .filter(game => game.gameState === 'waiting' && game.players.size < game.maxPlayers);
+    
+    if (gameType) {
+        availableGames = availableGames.filter(game => game.gameType === gameType);
+    }
+    
+    const gameList = availableGames.map(game => game.getPublicGameInfo());
+    res.json(gameList);
 });
 
 app.get('/api/stats', (req, res) => {
     res.json(socketManager.getGameStats());
+});
+
+app.get('/api/game-types', (req, res) => {
+    res.json(GameFactory.getSupportedGameTypes());
 });
 
 // Error handling middleware
@@ -63,7 +74,9 @@ app.use((req, res) => {
 
 const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => {
-    console.log(`🎮 Multiplayer Sudoku server running on port ${PORT}`);
+    console.log(`🎮 Multiplayer Gaming server running on port ${PORT}`);
     console.log(`📊 Health check: http://localhost:${PORT}/api/health`);
     console.log(`🎯 Available games: http://localhost:${PORT}/api/games`);
+    console.log(`🎲 Game types: http://localhost:${PORT}/api/game-types`);
+    console.log(`📈 Stats: http://localhost:${PORT}/api/stats`);
 });

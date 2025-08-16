@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import { GameLobby } from './components/GameLobby';
-import { GameRoom } from './components/GameRoom';
+import { GameLobby } from './components/Games/Sudoku/GameLobby';
+import { GameRoom } from './components/Games/Sudoku/GameRoom';
 import { useSudokuStore } from './store/sudokuStore';
 import { Toaster } from '@/components/ui/sonner';
 

@@ -79,6 +79,7 @@ interface SudokuStore {
   setPlayerName: (name: string) => void;
   createGame: (difficulty: 'easy' | 'medium' | 'hard') => void;
   joinGame: (gameId: string) => void;
+  leaveGame: () => void;
   startGame: () => void;
   pauseGame: () => void;
   resumeGame: () => void;
@@ -144,6 +145,20 @@ export const useSudokuStore = create<SudokuStore>((set, get) => ({
     socket.on('playerLeft', (data) => {
       set({ currentGame: data.gameState });
       toast.info(`${data.playerName} left the game`);
+    });
+
+    socket.on('gameLeft', () => {
+      set({ 
+        currentGame: null,
+        selectedCell: null,
+        chatMessages: []
+      });
+      toast.success('Left the game successfully');
+    });
+
+    socket.on('hostChanged', (data) => {
+      set({ currentGame: data.gameState });
+      toast.info(`${data.newHost} is now the host`);
     });
 
     socket.on('gameStarted', (data) => {
@@ -218,7 +233,11 @@ export const useSudokuStore = create<SudokuStore>((set, get) => ({
   createGame: (difficulty) => {
     const { socket, playerName } = get();
     if (socket && playerName.trim()) {
-      socket.emit('createGame', { playerName: playerName.trim(), difficulty });
+      socket.emit('createGame', { 
+        playerName: playerName.trim(), 
+        gameType: 'sudoku',
+        difficulty 
+      });
     } else {
       toast.error('Please enter your name first');
     }
@@ -227,9 +246,20 @@ export const useSudokuStore = create<SudokuStore>((set, get) => ({
   joinGame: (gameId) => {
     const { socket, playerName } = get();
     if (socket && playerName.trim()) {
-      socket.emit('joinGame', { gameId, playerName: playerName.trim() });
+      socket.emit('joinGame', { 
+        gameId, 
+        playerName: playerName.trim(),
+        gameType: 'sudoku'
+      });
     } else {
       toast.error('Please enter your name first');
+    }
+  },
+
+  leaveGame: () => {
+    const { socket } = get();
+    if (socket) {
+      socket.emit('leaveGame');
     }
   },
 
@@ -294,7 +324,7 @@ export const useSudokuStore = create<SudokuStore>((set, get) => ({
   getAvailableGames: () => {
     const { socket } = get();
     if (socket) {
-      socket.emit('getAvailableGames');
+      socket.emit('getAvailableGames', { gameType: 'sudoku' });
     }
   }
 }));
