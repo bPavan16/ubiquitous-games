@@ -1,4 +1,4 @@
-const io = require('socket.io-client');
+import io from 'socket.io-client';
 
 // Test client to verify Socket.IO functionality
 const socket = io('http://localhost:3001');
