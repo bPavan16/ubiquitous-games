@@ -4,7 +4,8 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useSudokuStore } from '@/store/sudokuStore';
-import { Users, Play, Plus, Gamepad2, Trophy, Clock, RefreshCw } from 'lucide-react';
+import { Users, Play, Plus, Gamepad2, Trophy, Clock, RefreshCw, ArrowLeft } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export function GameLobby() {
   const {
@@ -87,6 +88,16 @@ export function GameLobby() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <div className="max-w-4xl mx-auto">
+        {/* Back Button */}
+        <div className="mb-4">
+          <Link to="/">
+            <Button variant="ghost" className="gap-2 text-gray-600 hover:text-gray-800">
+              <ArrowLeft className="w-4 h-4" />
+              Back to Games
+            </Button>
+          </Link>
+        </div>
+
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">

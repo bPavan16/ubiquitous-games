@@ -1,7 +1,8 @@
 import { useSudokuStore } from '@/store/sudokuStore';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Play, Pause, Lightbulb, Home, AlertCircle } from 'lucide-react';
+import { Play, Pause, Lightbulb, Home, AlertCircle, ArrowLeft } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export function GameControls() {
   const { 
@@ -131,6 +132,16 @@ export function GameControls() {
               Selected: Row {selectedCell.row + 1}, Column {selectedCell.col + 1}
             </div>
           )}
+
+          {/* Navigation */}
+          <div className="pt-2 border-t border-gray-200">
+            <Link to="/">
+              <Button variant="ghost" size="sm" className="w-full gap-2 text-gray-600 hover:text-gray-800">
+                <ArrowLeft className="w-4 h-4" />
+                Back to Games
+              </Button>
+            </Link>
+          </div>
         </div>
       </CardContent>
     </Card>
