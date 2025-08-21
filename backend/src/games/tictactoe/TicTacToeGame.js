@@ -1,4 +1,4 @@
-const BaseGame = require('../base/BaseGame');
+import BaseGame from '../base/BaseGame.js';
 
 class TicTacToeGame extends BaseGame {
 
@@ -309,4 +309,4 @@ class TicTacToeGame extends BaseGame {
     }
 }
 
-module.exports = TicTacToeGame;
+export default TicTacToeGame;

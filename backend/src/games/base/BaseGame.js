@@ -18,7 +18,7 @@ class BaseGame {
     if (this.players.size >= this.maxPlayers) {
       return false;
     }
-    
+
     this.players.set(playerId, {
       id: playerId,
       name: playerName,
@@ -27,13 +27,13 @@ class BaseGame {
       joinTime: Date.now(),
       lastActive: Date.now()
     });
-    
+
     return true;
   }
 
   removePlayer(playerId) {
     this.players.delete(playerId);
-    
+
     // If host leaves, assign new host
     if (playerId === this.host && this.players.size > 0) {
       this.host = this.players.keys().next().value;
@@ -89,7 +89,7 @@ class BaseGame {
 
   getGameState() {
     this.updateLeaderboard();
-    
+
     return {
       gameId: this.gameId,
       gameType: this.gameType,
@@ -131,4 +131,4 @@ class BaseGame {
   }
 }
 
-module.exports = BaseGame;
+export default BaseGame;

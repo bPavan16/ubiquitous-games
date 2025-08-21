@@ -1,5 +1,5 @@
-const SudokuGame = require('./sudoku/SudokuGame');
-const TicTacToeGame = require('./tictactoe/TicTacToeGame');
+import SudokuGame from './sudoku/SudokuGame.js';
+import TicTacToeGame from './tictactoe/TicTacToeGame.js';
 
 class GameFactory {
   static createGame(gameType, gameId, host, options = {}) {
@@ -44,4 +44,4 @@ class GameFactory {
   }
 }
 
-module.exports = GameFactory;
+export default GameFactory;

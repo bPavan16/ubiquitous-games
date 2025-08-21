@@ -1,5 +1,5 @@
-const { v4: uuidv4 } = require('uuid');
-const GameFactory = require('../games/GameFactory');
+import { v4 as uuidv4 } from 'uuid';
+import GameFactory from '../games/GameFactory.js';
 
 class UnifiedSocketManager {
     constructor(io) {
@@ -654,4 +654,4 @@ class UnifiedSocketManager {
     }
 }
 
-module.exports = UnifiedSocketManager;
+export default UnifiedSocketManager;

@@ -1,12 +1,12 @@
-const BaseGame = require('../base/BaseGame');
-const SudokuGenerator = require('./sudokuGenerator');
+import BaseGame from '../base/BaseGame.js';
+import SudokuGenerator from './sudokuGenerator.js';
 
 class SudokuGame extends BaseGame {
   constructor(gameId, host, difficulty = 'medium') {
     super(gameId, host, 'sudoku');
     this.difficulty = difficulty;
     this.maxPlayers = 4;
-    
+
     const { puzzle, solution } = SudokuGenerator.generatePuzzle(difficulty);
     this.puzzle = puzzle;
     this.solution = solution;
@@ -16,7 +16,7 @@ class SudokuGame extends BaseGame {
     if (this.players.size >= this.maxPlayers) {
       return false;
     }
-    
+
     this.players.set(playerId, {
       id: playerId,
       name: playerName,
@@ -29,7 +29,7 @@ class SudokuGame extends BaseGame {
       joinTime: Date.now(),
       lastActive: Date.now()
     });
-    
+
     return true;
   }
 
@@ -46,7 +46,7 @@ class SudokuGame extends BaseGame {
     const previousValue = player.progress[row][col];
     player.progress[row][col] = value;
     player.lastActive = Date.now();
-    
+
     // Record move in history
     this.moveHistory.push({
       playerId,
@@ -60,7 +60,7 @@ class SudokuGame extends BaseGame {
 
     // Check if move is correct
     const isCorrect = value === this.solution[row][col] || value === 0;
-    
+
     if (isCorrect && value !== 0) {
       player.score += 10;
       player.correctMoves++;
@@ -77,9 +77,9 @@ class SudokuGame extends BaseGame {
       this.updateLeaderboard();
     }
 
-    return { 
-      success: true, 
-      isCorrect, 
+    return {
+      success: true,
+      isCorrect,
       score: player.score,
       completion: this.getPlayerCompletion(playerId)
     };
@@ -171,7 +171,7 @@ class SudokuGame extends BaseGame {
 
   getGameState() {
     const baseState = super.getGameState();
-    
+
     return {
       ...baseState,
       puzzle: this.puzzle,
@@ -185,12 +185,11 @@ class SudokuGame extends BaseGame {
 
   getPublicGameInfo() {
     const baseInfo = super.getPublicGameInfo();
-    
+
     return {
       ...baseInfo,
       difficulty: this.difficulty
     };
   }
 }
-
-module.exports = SudokuGame;
+export default SudokuGame;

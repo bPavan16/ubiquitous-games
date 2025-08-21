@@ -170,4 +170,5 @@ class SudokuGenerator {
   }
 }
 
-module.exports = SudokuGenerator;
+
+export default SudokuGenerator;
