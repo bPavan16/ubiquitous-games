@@ -59,7 +59,7 @@ export function GameHome() {
                         <p className="text-white/80">{game.description}</p>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Users className="w-4 h-4" />
@@ -74,7 +74,7 @@ export function GameHome() {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="p-6 bg-white">
                     <Link to={game.path}>
                       <Button className="w-full group-hover:bg-gradient-to-r group-hover:from-blue-500 group-hover:to-indigo-600 transition-all duration-300">
@@ -89,31 +89,7 @@ export function GameHome() {
           </div>
 
           {/* Statistics */}
-          <div className="mt-16">
-            <Card className="border-0 shadow-lg bg-gradient-to-r from-white to-blue-50/50">
-              <CardContent className="p-8">
-                <h3 className="text-2xl font-bold text-center text-gray-800 mb-8">Platform Statistics</h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-blue-600 mb-2">{games.length}</div>
-                    <div className="text-gray-600">Games Available</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-green-600 mb-2">∞</div>
-                    <div className="text-gray-600">Rooms to Create</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-purple-600 mb-2">Real-time</div>
-                    <div className="text-gray-600">Multiplayer</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-orange-600 mb-2">Free</div>
-                    <div className="text-gray-600">Always</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+          
         </div>
       )}
     </div>

@@ -242,7 +242,23 @@ class TicTacToeGame extends BaseGame {
         this.startTime = null;
         this.endTime = null;
 
-        // Reset current player to X
+        // Switch symbols - previous X becomes O, previous O becomes X
+        const players = Array.from(this.players.values());
+        if (players.length === 2) {
+            const player1 = players[0];
+            const player2 = players[1];
+            
+            // Switch symbols
+            const temp = player1.symbol;
+            player1.symbol = player2.symbol;
+            player2.symbol = temp;
+            
+            // Update the symbols map
+            this.symbols.set(player1.id, player1.symbol);
+            this.symbols.set(player2.id, player2.symbol);
+        }
+
+        // Set current player to whoever has X now
         for (const [playerId, player] of this.players) {
             if (player.symbol === 'X') {
                 this.currentPlayer = playerId;

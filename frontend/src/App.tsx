@@ -3,6 +3,7 @@ import { GameHome } from './components/Home/GameHome';
 import { SudokuApp } from './components/Games/Sudoku/SudokuApp';
 import { TicTacToeApp } from './components/Games/TicTacToe/TicTacToeApp';
 import { Toaster } from '@/components/ui/sonner';
+import Demo from './components/demo';
 
 function App() {
   return (
@@ -27,8 +28,10 @@ function App() {
               <TicTacToeApp />
             </div>
           } />
+        <Route path="/demo" element={<Demo />} />
         </Routes>
-        
+
+
         <Toaster richColors position="top-right" />
       </div>
     </Router>
