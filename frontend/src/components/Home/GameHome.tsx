@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Gamepad2, Grid3X3, Trophy, Home, Users } from 'lucide-react';
+import { Gamepad2, Grid3X3, Trophy, Home, Users, Ship } from 'lucide-react';
 
 export function GameHome() {
   const location = useLocation();
@@ -25,6 +25,16 @@ export function GameHome() {
       description: 'Classic X and O strategy',
       path: '/tictactoe',
       color: 'from-green-500 to-emerald-600',
+      difficulty: ['Standard'],
+      maxPlayers: 2
+    },
+    {
+      id: 'battleship',
+      name: 'Battleship',
+      icon: Ship,
+      description: 'Naval warfare strategy',
+      path: '/battleship',
+      color: 'from-red-500 to-orange-600',
       difficulty: ['Standard'],
       maxPlayers: 2
     }

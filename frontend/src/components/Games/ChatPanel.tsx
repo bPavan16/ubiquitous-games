@@ -1,11 +1,19 @@
 import { useState, useRef, useEffect } from 'react';
 import { useSudokuStore } from '@/store/sudokuStore';
+import { useBattleshipStore } from '@/store/battleshipStore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Send } from 'lucide-react';
 
 export function ChatPanel() {
-  const { chatMessages, sendChatMessage, currentGame } = useSudokuStore();
+  // Detect which game is being played based on the URL or context
+  const currentPath = window.location.pathname;
+  const isBattleship = currentPath.includes('battleship');
+  
+  const sudokuStore = useSudokuStore();
+  const battleshipStore = useBattleshipStore();
+  
+  const { chatMessages, sendChatMessage, currentGame } = isBattleship ? battleshipStore : sudokuStore;
   const [message, setMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
