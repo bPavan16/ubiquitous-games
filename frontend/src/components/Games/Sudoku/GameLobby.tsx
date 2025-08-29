@@ -89,7 +89,7 @@ export function GameLobby() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <div className="max-w-4xl mx-auto">
         {/* Back Button */}
-        <div className="mb-4">
+        <div className="mb-2">
           <Link to="/">
             <Button variant="ghost" className="gap-2 text-gray-600 hover:text-gray-800">
               <ArrowLeft className="w-4 h-4" />
@@ -99,8 +99,8 @@ export function GameLobby() {
         </div>
 
         {/* Header */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-3 mb-4">
+        <div className="text-center mb-4">
+          <div className="flex items-center justify-center gap-3 mb-1">
             <Gamepad2 className="w-8 h-8 text-blue-600" />
             <h1 className="text-4xl font-bold text-gray-800">Multiplayer Sudoku</h1>
           </div>
@@ -108,7 +108,7 @@ export function GameLobby() {
         </div>
 
         {/* Player Name Input */}
-        <Card className="mb-8">
+        <Card className="mb-4">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Users className="w-5 h-5" />
@@ -279,37 +279,46 @@ export function GameLobby() {
         </div>
 
         {/* Game Statistics */}
-        <Card className="mt-8">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Trophy className="w-5 h-5" />
-              Game Statistics
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">{availableGames.length}</div>
-                <div className="text-sm text-gray-600">Available Games</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">
-                  {availableGames.reduce((acc, game) => acc + game.playerCount, 0)}
-                </div>
-                <div className="text-sm text-gray-600">Players Online</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-purple-600">3</div>
-                <div className="text-sm text-gray-600">Difficulty Levels</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-orange-600">4</div>
-                <div className="text-sm text-gray-600">Max Players</div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* {<GameStatsBar />} */}
+
+
       </div>
     </div>
   );
+
+
+  
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars 
+  function GameStatsBar() {
+    return <Card className="mt-8">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Trophy className="w-5 h-5" />
+          Game Statistics
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="text-center">
+            <div className="text-2xl font-bold text-blue-600">{availableGames.length}</div>
+            <div className="text-sm text-gray-600">Available Games</div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-green-600">
+              {availableGames.reduce((acc, game) => acc + game.playerCount, 0)}
+            </div>
+            <div className="text-sm text-gray-600">Players Online</div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-purple-600">3</div>
+            <div className="text-sm text-gray-600">Difficulty Levels</div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-orange-600">4</div>
+            <div className="text-sm text-gray-600">Max Players</div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>;
+  }
 }

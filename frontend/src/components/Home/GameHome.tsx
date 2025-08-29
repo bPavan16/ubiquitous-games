@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Gamepad2, Grid3X3, Trophy, Home, Users, Ship, Menu, X } from 'lucide-react';
+import { Gamepad2, Grid3X3, Home, Users, Ship, Menu, X, Grid3x3, Tally5Icon } from 'lucide-react';
 
 export function GameHome() {
   const location = useLocation();
@@ -23,7 +23,7 @@ export function GameHome() {
     {
       id: 'tictactoe',
       name: 'Tic Tac Toe',
-      icon: Trophy,
+      icon: Tally5Icon,
       description: 'Classic X and O strategy',
       path: '/tictactoe',
       color: 'from-green-500 to-emerald-600',
