@@ -229,10 +229,10 @@ export function BattleshipGameRoom() {
 
           {/* Right Sidebar - Chat & Info Tabs */}
           <div className="xl:col-span-3">
-            <Card className="shadow-xl bg-gradient-to-br min-h-[700px] from-white to-indigo-50/50 border border-indigo-200/60 h-[500px] flex flex-col">
+            <Card className="shadow-xl bg-gradient-to-br min-h-[700px] from-white to-indigo-50/50 border border-indigo-200/60 h-[500px] max-w-full flex flex-col">
               <CardContent className="flex-1 min-h-0 p-0">
                 <Tabs defaultValue="chat" className="h-full flex flex-col">
-                  <TabsList className="grid w-full grid-cols-3 m-3 mb-0">
+                  <TabsList className="grid w-full  max-w-[90%] grid-cols-3 self-center mb-0">
                     <TabsTrigger value="chat" className="text-xs">
                       <MessageCircle className="w-3 h-3 mr-1" />
                       Chat

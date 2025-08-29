@@ -4,7 +4,6 @@ import { SudokuApp } from './components/Games/Sudoku/SudokuApp';
 import { TicTacToeApp } from './components/Games/TicTacToe/TicTacToeApp';
 import { BattleshipApp } from './components/Games/Battleship/BattleshipApp';
 import { Toaster } from '@/components/ui/sonner';
-import Demo from './components/demo';
 
 function App() {
   return (
@@ -38,7 +37,6 @@ function App() {
             </div>
           } />
 
-          <Route path="/demo" element={<Demo />} />
 
         </Routes>
           <Toaster richColors position="top-right" />

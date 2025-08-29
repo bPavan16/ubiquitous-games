@@ -70,7 +70,7 @@ export function BattleshipGameLobby() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-slate-800 to-indigo-900">
+    <div className="min-h-screen bg-gradient-to-br from-blue-800 via-slate-800 to-indigo-900">
       {/* Animated background */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-20 left-10 animate-float">
@@ -87,10 +87,10 @@ export function BattleshipGameLobby() {
         </div>
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 py-8">
+      <div className="relative z-10 container mx-auto px-4 py-3">
         {/* Header */}
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center gap-4 mb-6">
+        <div className="text-center mb-5">
+          <div className="flex items-center justify-center gap-2 mb-2">
             <div className="p-4 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl shadow-lg">
               <Ship className="w-12 h-12 text-white" />
             </div>
@@ -104,7 +104,7 @@ export function BattleshipGameLobby() {
           </p>
           
           {/* Connection status */}
-          <div className="mt-6">
+          <div className="mt-2">
             <Badge 
               className={`px-4 py-2 text-sm font-medium ${
                 isConnected 
@@ -112,30 +112,30 @@ export function BattleshipGameLobby() {
                   : 'bg-red-500/20 text-red-300 border-red-500/30'
               }`}
             >
-              {isConnected ? '🟢 Connected to Server' : '🔴 Disconnected'}
+              {isConnected ? '🟢 Connected to Game Server' : '🔴 Disconnected'}
             </Badge>
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+        <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto ">
           {/* Create/Join Game Section */}
-          <Card className="border-0 shadow-2xl bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-sm">
-            <CardHeader className="pb-6">
+          <Card className="border-0 gap-1 shadow-2xl bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-sm">
+            <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-3 text-2xl font-bold text-white">
                 <div className="p-3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl">
                   <Plus className="w-6 h-6 text-white" />
                 </div>
-                Start Your Naval Campaign
+                Start Your Battleship Adventure
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Player Name Input */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-blue-200">
-                  Admiral Name
+                <label className="text-md  font-medium text-blue-200">
+                  Player Name
                 </label>
                 <Input
-                  placeholder="Enter your admiral name..."
+                  placeholder="Enter your player name"
                   value={playerName}
                   onChange={(e) => setPlayerName(e.target.value)}
                   className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-blue-400"
@@ -149,7 +149,7 @@ export function BattleshipGameLobby() {
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-white flex items-center gap-2">
                   <Ship className="w-5 h-5 text-blue-400" />
-                  Create New Battle
+                  Start Your Game
                 </h3>
                 <Button
                   onClick={handleCreateGame}
@@ -190,8 +190,8 @@ export function BattleshipGameLobby() {
           </Card>
 
           {/* Game Rules & Info */}
-          <Card className="border-0 shadow-2xl bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-sm">
-            <CardHeader className="pb-6">
+          <Card className="border-0 gap-1 shadow-2xl bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-sm">
+            <CardHeader className="pb-1">
               <CardTitle className="flex items-center gap-3 text-2xl font-bold text-white">
                 <div className="p-3 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl">
                   <Target className="w-6 h-6 text-white" />
@@ -211,7 +211,7 @@ export function BattleshipGameLobby() {
                     { name: 'Submarine', size: 3, icon: '🌊' },
                     { name: 'Destroyer', size: 2, icon: '🚤' }
                   ].map((ship) => (
-                    <div key={ship.name} className="flex items-center justify-between p-3 bg-slate-700/50 rounded-lg">
+                    <div key={ship.name} className="flex items-center justify-between py-1 px-3 bg-slate-700/50 rounded-lg">
                       <div className="flex items-center gap-3">
                         <span className="text-2xl">{ship.icon}</span>
                         <span className="text-white font-medium">{ship.name}</span>

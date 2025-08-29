@@ -70,9 +70,9 @@ export function ShipPlacement() {
     const canStart = allShipsPlaced && isReady();
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-2">
             {/* Header */}
-            <Card className="border-0 shadow-lg bg-gradient-to-br  from-slate-100/90 to-slate-200/90">
+            <Card className="border-0 gap-1 shadow-lg bg-gradient-to-br  from-slate-100/90 to-slate-200/90">
                 <CardHeader className="">
                     <CardTitle className="flex items-center justify-between text-xl font-bold text-black">
                         <div className="flex items-center gap-2">
@@ -102,7 +102,7 @@ export function ShipPlacement() {
             </Card>
 
             {/* Ship Selection */}
-            <Card className="border-0 shadow-lg bg-gradient-to-br from-slate-100/90 to-slate-200/90">
+            <Card className="border-0 gap-1 shadow-lg bg-gradient-to-br from-slate-100/90 to-slate-200/90">
                 <CardHeader className="">
                     <CardTitle className="text-lg font-semibold text-black">
                         Select Ship to Place
@@ -192,7 +192,7 @@ export function ShipPlacement() {
             </Card>
 
             {/* Instructions */}
-            <Card className="border-0 shadow-lg bg-gradient-to-br px-2 py-1 from-slate-100/90 to-slate-200/90">
+            <Card className="border-0 gap-1 p-1 shadow-lg bg-gradient-to-br px-2 py-1 from-slate-100/90 to-slate-200/90">
                 <CardContent className="px-4 py-1">
                     <div className="text-sm text-black space-y-2">
                         <div className="font-semibold text-black">Instructions:</div>
@@ -212,7 +212,7 @@ export function ShipPlacement() {
                 <Button
                     variant="outline"
                     onClick={handleRandomPlacement}
-                    className="flex-1 border-slate-600 bg-slate-700 text-black hover:bg-slate-600"
+                    className="flex-1 border-slate-600 bg-slate-700 text-white hover:text-white hover:bg-black"
                     disabled={allShipsPlaced}
                 >
                     <Shuffle className="w-4 h-4 mr-2" />
@@ -223,7 +223,7 @@ export function ShipPlacement() {
                     onClick={handleStartGame}
                     disabled={!canStart}
                     className={`flex-1 font-semibold ${canStart
-                            ? 'bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-black'
+                            ? 'bg-gradient-to-r bg-blue-600 text-white hover:from-blue-700 hover:to-blue-700 '
                             : 'bg-slate-600 text-slate-400 cursor-not-allowed'
                         }`}
                 >

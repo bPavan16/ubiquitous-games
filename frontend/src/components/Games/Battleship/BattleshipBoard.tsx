@@ -299,14 +299,14 @@ export function BattleshipBoard() {
             </div>
             
             {/* Status indicators */}
-            <div className="flex gap-2">
+            <div className="flex gap-2  ">
               {isSetupPhase && (
-                <Badge className="bg-gradient-to-r from-blue-100 to-sky-100 text-blue-800 border border-blue-300 shadow-sm">
+                <Badge className="bg-gradient-to-r from-blue-100 to-sky-100 text-blue-800 border text-md border-blue-300 shadow-sm">
                   Setup Phase
                 </Badge>
               )}
               {isBattlePhase && (
-                <Badge className={`shadow-sm ${
+                <Badge className={`shadow-sm text-md ${
                   isMyTurn() 
                     ? 'bg-gradient-to-r from-emerald-100 to-green-100 text-emerald-800 border border-emerald-300' 
                     : 'bg-gradient-to-r from-orange-100 to-amber-100 text-orange-800 border border-orange-300'
