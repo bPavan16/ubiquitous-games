@@ -39,16 +39,45 @@ app.get('/api/health', (req, res) => {
     });
 });
 
+app.get('/', (req, res) => {
+    res.send(`
+        <html>
+            <head>
+                <title>Ubiqutous Gaming Server</title>
+                <style>
+                    body { font-family: Arial, sans-serif; background: #f9f9f9; color: #222; margin: 40px; }
+                    h1 { color: #2c3e50; }
+                    ul { line-height: 1.8; }
+                    .container { max-width: 600px; margin: auto; background: #fff; padding: 32px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>Welcome to the Ubiqutous Gaming Server!</h1>
+                    <p>This backend powers real-time multiplayer games via REST and WebSocket APIs.</p>
+                    <ul>
+                        <li><a href="/api/health">Health Check</a></li>
+                        <li><a href="/api/games">Available Games</a></li>
+                        <li><a href="/api/game-types">Supported Game Types</a></li>
+                        <li><a href="/api/stats">Server Stats</a></li>
+                    </ul>
+                    <p>Connect your client to play, create, or join games!</p>
+                </div>
+            </body>
+        </html>
+    `);
+});
+
 app.get('/api/games', (req, res) => {
     const { gameType } = req.query;
-    
+
     let availableGames = Array.from(socketManager.games.values())
         .filter(game => game.gameState === 'waiting' && game.players.size < game.maxPlayers);
-    
+
     if (gameType) {
         availableGames = availableGames.filter(game => game.gameType === gameType);
     }
-    
+
     const gameList = availableGames.map(game => game.getPublicGameInfo());
     res.json(gameList);
 });
