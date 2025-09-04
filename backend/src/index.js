@@ -11,17 +11,33 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
     cors: {
-        origin: process.env.CORS_ORIGIN || "*",
+        origin: process.env.CORS_ORIGIN || [
+            "http://localhost:5173",
+            "http://localhost:3000", 
+            "https://ubiquitous-games.vercel.app",
+            "https://ubiquitous-games-frontend.vercel.app"
+        ],
         methods: ["GET", "POST"],
         credentials: true
     },
-    transports:["websocket"]
+    // Vercel doesn't support WebSockets, force polling
+    transports: ["polling"],
+    allowEIO3: true,
+    pingTimeout: 60000,
+    pingInterval: 25000
 });
 
 // Middleware
 app.use(cors({
-    origin: process.env.CORS_ORIGIN || "*",
-    credentials: true
+    origin: process.env.CORS_ORIGIN || [
+        "http://localhost:5173",
+        "http://localhost:3000", 
+        "https://ubiquitous-games.vercel.app",
+        "https://ubiquitous-games-frontend.vercel.app"
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
 app.use(express.json());
@@ -106,6 +122,8 @@ app.use((req, res) => {
 });
 
 const PORT = process.env.PORT || 3001;
+
+// Start server for both local development and production
 server.listen(PORT, () => {
     console.log(`🎮 Multiplayer Gaming server running on port ${PORT}`);
     console.log(`📊 Health check: http://localhost:${PORT}/api/health`);
@@ -113,3 +131,6 @@ server.listen(PORT, () => {
     console.log(`🎲 Game types: http://localhost:${PORT}/api/game-types`);
     console.log(`📈 Stats: http://localhost:${PORT}/api/stats`);
 });
+
+// Export for Vercel
+export default app;

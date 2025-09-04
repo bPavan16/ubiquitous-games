@@ -108,8 +108,14 @@ export const useSudokuStore = create<SudokuStore>((set, get) => ({
 
   // Actions
   connect: () => {
-    const socket = io(import.meta.env.VITE_BACKEND_SERVER_URL, {
-     transports: ["websocket"],
+    const socket = io(import.meta.env.VITE_BACKEND_SERVER_URL || 'http://localhost:3001', {
+      autoConnect: true,
+      reconnection: true,
+      reconnectionDelay: 1000,
+      reconnectionAttempts: 5,
+      timeout: 20000,
+      transports: ["polling"], // Force polling for Vercel compatibility
+      forceNew: true
     });
     
     socket.on('connect', () => {
