@@ -4,12 +4,7 @@ import { toast } from 'sonner';
 
 // Enhanced socket connection with better configuration
 const socket = io(import.meta.env.VITE_BACKEND_SERVER_URL, {
-  autoConnect: true,
-  reconnection: true,
-  reconnectionDelay: 1000,
-  reconnectionAttempts: 5,
-  timeout: 20000,
-  transports: ['websocket']
+  transports: ["websocket"],
 });
 
 interface Ship {

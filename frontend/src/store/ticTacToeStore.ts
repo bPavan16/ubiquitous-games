@@ -100,8 +100,9 @@ export const useTicTacToeStore = create<TicTacToeStore>((set, get) => ({
 
     // Actions
     connect: () => {
-        const socket = io( import.meta.env.VITE_BACKEND_SERVER_URL, {
-            transports: ['websocket']
+        const socket = io(import.meta.env.VITE_BACKEND_SERVER_URL, {
+             transports: ["websocket"],
+
         });
 
         socket.on('connect', () => {
