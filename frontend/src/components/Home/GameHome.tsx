@@ -3,7 +3,8 @@ import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Gamepad2, Grid3X3, Trophy, Home, Users, Ship, Menu, X, Keyboard } from 'lucide-react';
+
+import { Gamepad2, Grid3X3, Trophy, Home, Users, Ship, Menu, X } from 'lucide-react';
 
 export function GameHome() {
   const location = useLocation();

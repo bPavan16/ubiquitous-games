@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useSudokuStore } from '@/store/sudokuStore';
-import { Users, Play, Plus, Gamepad2, Trophy, Clock, RefreshCw, ArrowLeft } from 'lucide-react';
+import { Users, Play, Plus, Gamepad2, Clock, RefreshCw, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export function GameLobby() {
@@ -288,37 +288,37 @@ export function GameLobby() {
 
 
   
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars 
-  function GameStatsBar() {
-    return <Card className="mt-8">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Trophy className="w-5 h-5" />
-          Game Statistics
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-blue-600">{availableGames.length}</div>
-            <div className="text-sm text-gray-600">Available Games</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-green-600">
-              {availableGames.reduce((acc, game) => acc + game.playerCount, 0)}
-            </div>
-            <div className="text-sm text-gray-600">Players Online</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-purple-600">3</div>
-            <div className="text-sm text-gray-600">Difficulty Levels</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-orange-600">4</div>
-            <div className="text-sm text-gray-600">Max Players</div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>;
-  }
+  // // eslint-disable-next-line @typescript-eslint/no-unused-vars 
+  // function GameStatsBar() {
+  //   return <Card className="mt-8">
+  //     <CardHeader>
+  //       <CardTitle className="flex items-center gap-2">
+  //         <Trophy className="w-5 h-5" />
+  //         Game Statistics
+  //       </CardTitle>
+  //     </CardHeader>
+  //     <CardContent>
+  //       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+  //         <div className="text-center">
+  //           <div className="text-2xl font-bold text-blue-600">{availableGames.length}</div>
+  //           <div className="text-sm text-gray-600">Available Games</div>
+  //         </div>
+  //         <div className="text-center">
+  //           <div className="text-2xl font-bold text-green-600">
+  //             {availableGames.reduce((acc, game) => acc + game.playerCount, 0)}
+  //           </div>
+  //           <div className="text-sm text-gray-600">Players Online</div>
+  //         </div>
+  //         <div className="text-center">
+  //           <div className="text-2xl font-bold text-purple-600">3</div>
+  //           <div className="text-sm text-gray-600">Difficulty Levels</div>
+  //         </div>
+  //         <div className="text-center">
+  //           <div className="text-2xl font-bold text-orange-600">4</div>
+  //           <div className="text-sm text-gray-600">Max Players</div>
+  //         </div>
+  //       </div>
+  //     </CardContent>
+  //   </Card>;
+  // }
 }
