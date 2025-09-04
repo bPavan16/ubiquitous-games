@@ -2,6 +2,7 @@ import BaseGame from '../base/BaseGame.js';
 import SudokuGenerator from './sudokuGenerator.js';
 
 class SudokuGame extends BaseGame {
+
   constructor(gameId, host, difficulty = 'medium') {
     super(gameId, host, 'sudoku');
     this.difficulty = difficulty;
@@ -13,6 +14,7 @@ class SudokuGame extends BaseGame {
   }
 
   addPlayer(playerId, playerName) {
+
     if (this.players.size >= this.maxPlayers) {
       return false;
     }

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Gamepad2, Grid3X3, Home, Users, Ship, Menu, X, Grid3x3, Tally5Icon } from 'lucide-react';
+import { Gamepad2, Grid3X3, Trophy, Home, Users, Ship, Menu, X, Keyboard } from 'lucide-react';
 
 export function GameHome() {
   const location = useLocation();
@@ -23,14 +23,26 @@ export function GameHome() {
     {
       id: 'tictactoe',
       name: 'Tic Tac Toe',
-      icon: Tally5Icon,
+      icon: Trophy,
       description: 'Classic X and O strategy',
       path: '/tictactoe',
       color: 'from-green-500 to-emerald-600',
       difficulty: ['Standard'],
       maxPlayers: 2
     },
-    {
+  
+    // {
+    //   id: 'typing',
+    //   name: 'Speed Typing',
+    //   icon: Keyboard,
+    //   description: 'Race to type the fastest',
+    //   path: '/typing',
+    //   color: 'from-pink-800 to-pink-400',
+    //   difficulty: ['Text Race', 'Word Sprint'],
+    //   maxPlayers: 4
+    // },
+    
+      {
       id: 'battleship',
       name: 'Battleship',
       icon: Ship,
@@ -39,7 +51,7 @@ export function GameHome() {
       color: 'from-purple-500 to-indigo-600',
       difficulty: ['Standard'],
       maxPlayers: 2
-    }
+    },
   ];
 
   const isHomePage = location.pathname === '/';

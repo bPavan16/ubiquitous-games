@@ -3,6 +3,7 @@ import { GameHome } from './components/Home/GameHome';
 import { SudokuApp } from './components/Games/Sudoku/SudokuApp';
 import { TicTacToeApp } from './components/Games/TicTacToe/TicTacToeApp';
 import { BattleshipApp } from './components/Games/Battleship/BattleshipApp';
+import { TypingApp } from './components/Games/Typing/TypingApp';
 import { Toaster } from '@/components/ui/sonner';
 
 function App() {
@@ -37,6 +38,12 @@ function App() {
             </div>
           } />
 
+          <Route path="/typing/*" element={
+            <div>
+              <GameHome />
+              <TypingApp />
+            </div>
+          } />
 
         </Routes>
           <Toaster richColors position="top-right" />

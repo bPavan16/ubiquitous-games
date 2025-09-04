@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import SudokuGame from '../models/SudokuGame.js';
 
 class SocketManager {
+  
   constructor(io) {
     this.io = io;
     this.games = new Map();

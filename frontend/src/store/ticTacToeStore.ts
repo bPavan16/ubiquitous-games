@@ -100,7 +100,7 @@ export const useTicTacToeStore = create<TicTacToeStore>((set, get) => ({
 
     // Actions
     connect: () => {
-        const socket = io('http://localhost:3001');
+        const socket = io( import.meta.env.VITE_BACKEND_SERVER_URL, );
 
         socket.on('connect', () => {
             set({ socket, isConnected: true });

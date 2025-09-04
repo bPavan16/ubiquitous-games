@@ -1,5 +1,7 @@
 import SudokuGame from './sudoku/SudokuGame.js';
 import TicTacToeGame from './tictactoe/TicTacToeGame.js';
+import BattleshipGame from './battleship/BattleshipGame.js';
+import TypingGame from './typing/TypingGame.js';
 
 class GameFactory {
   static createGame(gameType, gameId, host, options = {}) {
@@ -9,6 +11,12 @@ class GameFactory {
       
       case 'tictactoe':
         return new TicTacToeGame(gameId, host);
+      
+      case 'battleship':
+        return new BattleshipGame(gameId, host);
+      
+      case 'typing':
+        return new TypingGame(gameId, host, options.mode, options);
       
       default:
         throw new Error(`Unsupported game type: ${gameType}`);
@@ -34,6 +42,26 @@ class GameFactory {
         minPlayers: 2,
         maxPlayers: 2,
         options: {}
+      },
+      {
+        type: 'battleship',
+        name: 'Battleship',
+        description: 'Naval strategy game - sink your opponent\'s fleet',
+        minPlayers: 2,
+        maxPlayers: 2,
+        options: {}
+      },
+      {
+        type: 'typing',
+        name: 'Typing Race',
+        description: 'Multiplayer typing speed competition',
+        minPlayers: 2,
+        maxPlayers: 8,
+        options: {
+          mode: ['text-race', 'word-sprint'],
+          duration: [30, 60, 120],
+          wordCount: [25, 50, 100]
+        }
       }
     ];
   }

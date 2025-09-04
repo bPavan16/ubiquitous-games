@@ -57,6 +57,32 @@ class UnifiedSocketManager {
                 this.handleResetBoard(socket);
             });
 
+            // Battleship-specific events
+            socket.on('placeShip', (data) => {
+                this.handlePlaceShip(socket, data);
+            });
+
+            socket.on('fireShot', (data) => {
+                this.handleFireShot(socket, data);
+            });
+
+            socket.on('resetBattleshipGame', () => {
+                this.handleResetBattleshipGame(socket);
+            });
+
+            socket.on('getOpponentBoard', () => {
+                this.handleGetOpponentBoard(socket);
+            });
+
+            // Typing-specific events
+            socket.on('updateTypingProgress', (data) => {
+                this.handleUpdateTypingProgress(socket, data);
+            });
+
+            socket.on('getTypingGameContent', () => {
+                this.handleGetTypingGameContent(socket);
+            });
+
             // Common events
             socket.on('getLeaderboard', () => {
                 this.handleGetLeaderboard(socket);
@@ -86,7 +112,7 @@ class UnifiedSocketManager {
 
     handleCreateGame(socket, data) {
         try {
-            const { playerName, gameType, difficulty } = data;
+            const { playerName, gameType, difficulty, mode, duration, wordCount } = data;
 
             if (!playerName || playerName.trim().length === 0) {
                 socket.emit('error', { message: 'Player name is required' });
@@ -99,7 +125,8 @@ class UnifiedSocketManager {
             }
 
             const gameId = uuidv4();
-            const game = GameFactory.createGame(gameType, gameId, socket.id, { difficulty });
+            const options = { difficulty, mode, duration, wordCount };
+            const game = GameFactory.createGame(gameType, gameId, socket.id, options);
 
             if (game.addPlayer(socket.id, playerName.trim())) {
                 this.games.set(gameId, game);
@@ -254,6 +281,10 @@ class UnifiedSocketManager {
                 result = this.handleSudokuMove(socket, game, data);
             } else if (game.gameType === 'tictactoe') {
                 result = this.handleTicTacToeMove(socket, game, data);
+            } else if (game.gameType === 'battleship') {
+                result = this.handleBattleshipMove(socket, game, data);
+            } else if (game.gameType === 'typing') {
+                result = this.handleTypingMove(socket, game, data);
             } else {
                 socket.emit('error', { message: 'Unsupported game type' });
                 return;
@@ -354,6 +385,245 @@ class UnifiedSocketManager {
                 col,
                 reason: result.reason
             });
+        }
+    }
+
+    handleBattleshipMove(socket, game, data) {
+        const { targetRow, targetCol } = data;
+
+        if (targetRow < 0 || targetRow >= game.boardSize || targetCol < 0 || targetCol >= game.boardSize) {
+            socket.emit('error', { message: 'Invalid shot coordinates' });
+            return;
+        }
+
+        const result = game.makeMove(socket.id, { targetRow, targetCol });
+
+        if (result.success) {
+            this.io.to(game.gameId).emit('shotFired', {
+                playerId: socket.id,
+                playerName: game.players.get(socket.id).name,
+                targetRow,
+                targetCol,
+                hit: result.hit,
+                shipHit: result.shipHit,
+                shipDestroyed: result.shipDestroyed,
+                continuesTurn: result.continuesTurn,
+                nextPlayer: result.nextPlayer,
+                gameState: game.getGameState()
+            });
+
+            if (result.gameResult.gameOver) {
+                const winnerName = result.gameResult.winner ?
+                    game.players.get(result.gameResult.winner).name : null;
+
+                this.io.to(game.gameId).emit('gameFinished', {
+                    winner: result.gameResult.winner,
+                    winnerName,
+                    reason: result.gameResult.reason,
+                    gameState: game.getGameState()
+                });
+
+                console.log(`Battleship game ${game.gameId} finished, winner: ${winnerName}`);
+            }
+        } else {
+            socket.emit('invalidMove', {
+                targetRow,
+                targetCol,
+                reason: result.reason
+            });
+        }
+    }
+
+    handleTypingMove(socket, game, data) {
+        // Expect frontend to send calculated progress data
+        const { wpm, accuracy, progress, position, isFinished } = data;
+
+        if (typeof wmp === 'undefined' || typeof accuracy === 'undefined' || 
+            typeof progress === 'undefined' || typeof position === 'undefined') {
+            socket.emit('error', { message: 'Invalid progress data' });
+            return;
+        }
+
+        const result = game.updatePlayerProgress(socket.id, {
+            wpm: wpm,
+            accuracy: accuracy,
+            progress: progress,
+            position: position,
+            isFinished: isFinished || false
+        });
+
+        if (result.success) {
+            // Broadcast leaderboard update to all players
+            this.io.to(game.gameId).emit('leaderboardUpdate', {
+                leaderboard: result.leaderboard,
+                gameState: result.gameState
+            });
+
+            // Check if game finished
+            if (game.isFinished) {
+                this.io.to(game.gameId).emit('gameFinished', {
+                    winner: game.winner,
+                    winnerName: game.players.get(game.winner)?.name,
+                    leaderboard: result.leaderboard,
+                    gameState: result.gameState
+                });
+                console.log(`Typing game ${game.gameId} finished, winner: ${game.players.get(game.winner)?.name}`);
+            }
+        } else {
+            socket.emit('error', { message: result.message });
+        }
+    }
+
+    handleUpdateTypingProgress(socket, data) {
+        // This is an alias for the typing move handler
+        const gameId = this.playerGameMap.get(socket.id);
+        const game = this.games.get(gameId);
+
+        if (!game || game.gameType !== 'typing') {
+            socket.emit('error', { message: 'Invalid game or game type' });
+            return;
+        }
+
+        this.handleTypingMove(socket, game, data);
+    }
+
+    handleGetTypingGameContent(socket) {
+        try {
+            const gameId = this.playerGameMap.get(socket.id);
+            const game = this.games.get(gameId);
+
+            if (!game || game.gameType !== 'typing') {
+                socket.emit('error', { message: 'Invalid game or game type' });
+                return;
+            }
+
+            socket.emit('typingGameContent', {
+                text: game.currentText,
+                words: game.words,
+                mode: game.mode,
+                duration: game.duration,
+                wordCount: game.wordCount
+            });
+        } catch (error) {
+            console.error('Error getting typing game content:', error);
+            socket.emit('error', { message: 'Internal server error' });
+        }
+    }
+
+    handlePlaceShip(socket, data) {
+        try {
+            const gameId = this.playerGameMap.get(socket.id);
+            const game = this.games.get(gameId);
+
+            if (!game || game.gameType !== 'battleship') {
+                console.log(`Invalid game or game type for ship placement by ${socket.id}`);
+                socket.emit('error', { message: 'Invalid game or game type' });
+                return;
+            }
+
+            const { shipName, startRow, startCol, orientation } = data;
+            console.log(`Ship placement attempt:`, { 
+                playerId: socket.id, 
+                shipName, 
+                startRow, 
+                startCol, 
+                orientation 
+            });
+
+            if (startRow < 0 || startRow >= game.boardSize || 
+                startCol < 0 || startCol >= game.boardSize) {
+                console.log(`Invalid ship coordinates: row=${startRow}, col=${startCol}`);
+                socket.emit('error', { message: 'Invalid ship coordinates' });
+                return;
+            }
+
+            if (!['horizontal', 'vertical'].includes(orientation)) {
+                console.log(`Invalid ship orientation: ${orientation}`);
+                socket.emit('error', { message: 'Invalid ship orientation' });
+                return;
+            }
+
+            const result = game.placeShip(socket.id, { shipName, startRow, startCol, orientation });
+            console.log(`Ship placement result:`, result);
+
+            if (result.success) {
+                socket.emit('shipPlaced', {
+                    shipName,
+                    startRow,
+                    startCol,
+                    orientation,
+                    shipsRemaining: result.shipsRemaining,
+                    isReady: result.isReady,
+                    gameState: game.getGameState()
+                });
+
+                // Notify other players that this player placed a ship (without revealing position)
+                socket.to(gameId).emit('playerShipPlaced', {
+                    playerId: socket.id,
+                    playerName: game.players.get(socket.id).name,
+                    shipName,
+                    isReady: result.isReady,
+                    gameState: game.getGameState()
+                });
+
+                // If game started (both players ready), notify all players
+                if (game.gamePhase === 'playing') {
+                    this.io.to(gameId).emit('gameStarted', {
+                        gameState: game.getGameState()
+                    });
+                    console.log(`Battleship battle phase started for game ${gameId}`);
+                }
+            } else {
+                console.log(`Ship placement failed: ${result.reason}`);
+                socket.emit('error', { message: result.reason });
+            }
+        } catch (error) {
+            console.error('Error placing ship:', error);
+            socket.emit('error', { message: 'Internal server error' });
+        }
+    }
+
+    handleFireShot(socket, data) {
+        // This is handled by makeMove for battleship
+        this.handleMakeMove(socket, data);
+    }
+
+    handleResetBattleshipGame(socket) {
+        try {
+            const gameId = this.playerGameMap.get(socket.id);
+            const game = this.games.get(gameId);
+
+            if (!game || game.gameType !== 'battleship' || game.host !== socket.id) {
+                socket.emit('error', { message: 'Only host can reset Battleship game' });
+                return;
+            }
+
+            game.resetGame();
+
+            this.io.to(gameId).emit('battleshipGameReset', {
+                gameState: game.getGameState()
+            });
+        } catch (error) {
+            console.error('Error resetting Battleship game:', error);
+            socket.emit('error', { message: 'Internal server error' });
+        }
+    }
+
+    handleGetOpponentBoard(socket) {
+        try {
+            const gameId = this.playerGameMap.get(socket.id);
+            const game = this.games.get(gameId);
+
+            if (!game || game.gameType !== 'battleship') {
+                socket.emit('error', { message: 'Invalid game or game type' });
+                return;
+            }
+
+            const opponentBoard = game.getOpponentBoardState(socket.id);
+            socket.emit('opponentBoardState', { opponentBoard });
+        } catch (error) {
+            console.error('Error getting opponent board:', error);
+            socket.emit('error', { message: 'Internal server error' });
         }
     }
 

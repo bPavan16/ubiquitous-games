@@ -3,7 +3,7 @@ import { io } from 'socket.io-client';
 import { toast } from 'sonner';
 
 // Enhanced socket connection with better configuration
-const socket = io('http://localhost:3001', {
+const socket = io(import.meta.env.VITE_BACKEND_SERVER_URL, {
   autoConnect: true,
   reconnection: true,
   reconnectionDelay: 1000,
