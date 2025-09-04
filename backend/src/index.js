@@ -11,20 +11,16 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
     cors: {
-        origin: "*",
+        origin: process.env.CORS_ORIGIN || "*",
         methods: ["GET", "POST"],
         credentials: true
     },
-    // Force polling for Vercel compatibility
-    transports: process.env.NODE_ENV === 'production' ? ['polling'] : ['websocket', 'polling'],
-    allowEIO3: true,
-    pingTimeout: 60000,
-    pingInterval: 25000
+    transports:["websocket"]
 });
 
 // Middleware
 app.use(cors({
-    origin: "*",
+    origin: process.env.CORS_ORIGIN || "*",
     credentials: true
 }));
 
