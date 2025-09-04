@@ -19,9 +19,10 @@ const io = new Server(server, {
 
 // Middleware
 app.use(cors({
-    origin: ["http://localhost:5174", "http://localhost:5173", "http://localhost:3000"],
+    origin: "*",
     credentials: true
 }));
+
 app.use(express.json());
 
 // Initialize Unified Socket Manager
