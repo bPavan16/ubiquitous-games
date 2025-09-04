@@ -9,7 +9,7 @@ const socket = io(import.meta.env.VITE_BACKEND_SERVER_URL, {
   reconnectionDelay: 1000,
   reconnectionAttempts: 5,
   timeout: 20000,
-  transports: ['websocket', 'polling']
+  transports: ['websocket']
 });
 
 interface Ship {
