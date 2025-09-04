@@ -3,13 +3,14 @@ import { io } from 'socket.io-client';
 import { toast } from 'sonner';
 
 // Enhanced socket connection
-const socket = io('http://localhost:3001', {
+const socket = io(import.meta.env.VITE_BACKEND_SERVER_URL || 'http://localhost:3001', {
   autoConnect: true,
   reconnection: true,
   reconnectionDelay: 1000,
   reconnectionAttempts: 5,
   timeout: 20000,
-  transports: ['websocket', 'polling']
+  transports: import.meta.env.PROD ? ['polling'] : ['websocket', 'polling'],
+  forceNew: true
 });
 
 // Text content pools for frontend generation
