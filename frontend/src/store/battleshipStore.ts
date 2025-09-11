@@ -2,7 +2,10 @@ import { create } from 'zustand';
 import { io } from 'socket.io-client';
 import { toast } from 'sonner';
 
-// Enhanced socket connection with better configuration
+// Enhanced socket connection with better configuration and error handling to deploy on Vercel 
+
+// Vercel ki MKC deploying it on Render
+
 const socket = io(import.meta.env.VITE_BACKEND_SERVER_URL || 'http://localhost:3001', {
   autoConnect: true,
   reconnection: true,
@@ -13,12 +16,15 @@ const socket = io(import.meta.env.VITE_BACKEND_SERVER_URL || 'http://localhost:3
   forceNew: true
 });
 
+
+// An Interface for the Battleship game state and store
 interface Ship {
   name: string;
   size: number;
   count: number;
 }
 
+// A ship that has been placed on the board  
 interface PlacedShip {
   name: string;
   size: number;
@@ -28,6 +34,7 @@ interface PlacedShip {
   orientation: 'horizontal' | 'vertical';
 }
 
+// For each cell on the board 
 interface BoardCell {
   row: number;
   col: number;
@@ -35,6 +42,7 @@ interface BoardCell {
   shipDestroyed?: boolean;
 }
 
+// The board and its state for each player 
 interface PlayerBoard {
   ships: PlacedShip[];
   hits: { row: number; col: number }[];
@@ -45,6 +53,7 @@ interface PlayerBoard {
   isReady: boolean;
 }
 
+// A player in the game i.e a participant 
 interface Player {
   id: string;
   name: string;
@@ -60,6 +69,9 @@ interface Player {
   isHost?: boolean;
 }
 
+
+// Each shot fired in the game with its result 
+
 interface ShotHistoryEntry {
   playerId: string;
   playerName: string;
@@ -70,6 +82,8 @@ interface ShotHistoryEntry {
   shipDestroyed: boolean;
   timestamp: number;
 }
+
+// State of the entire game 
 
 interface GameState {
   gameId: string;
@@ -90,6 +104,8 @@ interface GameState {
   endTime: number | null;
 }
 
+// Chat message structure for Battleship game
+
 interface ChatMessage {
   playerId: string;
   playerName: string;
@@ -97,7 +113,10 @@ interface ChatMessage {
   timestamp: number;
 }
 
+// The main store interface for managing state and actions 
+
 interface BattleshipStore {
+
   // Game state
   currentGame: GameState | null;
   isConnected: boolean;
@@ -109,11 +128,11 @@ interface BattleshipStore {
   hoveredCells: { row: number; col: number }[] | null;
   targetMode: boolean;
   opponentBoard: PlayerBoard | null;
-  
-  // Chat
+
+  // Chat Store to manage chat messages : Stores all the chat messages in the game
   chatMessages: ChatMessage[];
   
-  // Actions
+  // Actions to modify the state of the store
   createGame: (playerName: string) => void;
   joinGame: (gameId: string, playerName: string) => void;
   leaveGame: () => void;
@@ -122,13 +141,13 @@ interface BattleshipStore {
   resetGame: () => void;
   sendChatMessage: (message: string) => void;
   
-  // UI actions
+  // UI actions to manage user interactions 
   setSelectedShip: (ship: Ship | null) => void;
   setShipOrientation: (orientation: 'horizontal' | 'vertical') => void;
   setHoveredCells: (cells: { row: number; col: number }[] | null) => void;
   setTargetMode: (mode: boolean) => void;
-  
-  // Utility
+
+  // Utility functions for game logic to determine game state and display
   getCurrentPlayer: () => Player | null;
   getOpponent: () => Player | null;
   isMyTurn: () => boolean;
