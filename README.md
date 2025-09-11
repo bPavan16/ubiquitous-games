@@ -1,9 +1,15 @@
-# 🎮 Ubiquitous Games Platform
+<div align="center">
+
+  
+
+# Ubiquitous Games Platform
 
 A modern real-time multiplayer gaming platform featuring **Sudoku**, **Battleship**, and **Tic-Tac-Toe**. Built with cutting-edge web technologies for seamless multiplayer experiences with live chat, leaderboards, and responsive design.
 
 [![Live Demo](https://img.shields.io/badge/Live-Demo-blue?style=for-the-badge)](https://ubiquitous-games.vercel.app)
-[![GitHub](https://img.shields.io/github/stars/bPavan16/ubiquitous-sudoku?style=for-the-badge)](https://github.com/bPavan16/ubiquitous-sudoku)
+
+ 
+</div>
 
 ## ✨ Features
 
